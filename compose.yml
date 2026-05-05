@@ -9,6 +9,8 @@ services:
       - "5432:5432"
     volumes:
       - fintech-data:/var/lib/postgresql/data
+    networks:
+      - fintech-network
 
 
   backend:
@@ -17,6 +19,8 @@ services:
       - "3001:3001"
     depends_on:
       - database
+    networks:
+      - fintech-network
 
    
   frontend:
@@ -27,6 +31,11 @@ services:
       - backend
     args:
       - REACT_APP_API_URL=http://backend:3001
+    networks:
+      - fintech-network
 
   volumes:
     fintech-data:
+  networks:
+    fintech-network:
+      driver: bridge
