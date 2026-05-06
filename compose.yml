@@ -9,11 +9,15 @@ services:
       - "5432:5432"
     volumes:
       - fintech-data:/var/lib/postgresql
+    networks:
+      - fintech-network
 
   backend:
     build: ./backend
     ports:
       - "3001:3001"
+    networks:
+      - fintech-network
     environment:
       DB_HOST: database
       DB_PORT: 5432
@@ -30,9 +34,13 @@ services:
         - REACT_APP_API_URL=http://3.90.149.170:3001
     ports:
       - "80:80"
+    networks:
+      - fintech-network
     depends_on:
       - backend
 
 volumes:
   fintech-data:
-      driver: bridge
+networks:
+  fintech-network:
+    driver: bridge
