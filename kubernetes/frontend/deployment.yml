@@ -29,7 +29,6 @@ spec:
           ports:
             - containerPort: 80
 
-         
           #Para probar si el contenedor está vivo y listo para recibir tráfico, 
           livenessProbe:
             httpGet:
