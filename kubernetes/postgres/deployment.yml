@@ -1,6 +1,6 @@
 #archivo para generar el pod de postgres, con una replica, y las variables de entorno para configurar la base de datos, que se obtienen de un secret llamado postgres-secret, que debe contener las claves POSTGRES_USER, POSTGRES_PASSWORD y POSTGRES_DB con los valores correspondientes para el usuario, contraseña y nombre de la base de datos. El contenedor usa la imagen oficial de postgres:16 y expone el puerto 5432 para la conexión a la base de datos.
 apiVersion: apps/v1
-kind: StatefulSet 
+kind: StatefulSet
 
 metadata:
   name: postgres
