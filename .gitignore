@@ -1,17 +1,38 @@
+# Terraform
 **/.terraform/*
 *.tfstate
 *.tfstate.*
-*.pem
+*.tfvars
 .terraform.lock.hcl
+
+# Keys
+*.pem
+*.key
 
 # kubeconfig
 kubeconfig
+.kube/
 
-# ssh
+# SSH
 .ssh/
 
-# vscode
+# VSCode
 .vscode/
 
-# logs
+# Logs
 *.log
+
+# Node
+node_modules/
+
+# Build frontend
+frontend/build/
+frontend/dist/
+
+# Env files
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
