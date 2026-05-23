@@ -1,0 +1,17 @@
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.pem
+.terraform.lock.hcl
+
+# kubeconfig
+kubeconfig
+
+# ssh
+.ssh/
+
+# vscode
+.vscode/
+
+# logs
+*.log
