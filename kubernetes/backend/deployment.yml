@@ -55,24 +55,24 @@ spec:
                   key: POSTGRES_DB
 
           #Para probar si el contenedor está vivo y listo para recibir tráfico, se pueden usar probes de liveness y readiness, que hacen peticiones HTTP a una ruta específica del backend, en este caso /api/health, que debería devolver un status 200 si el backend está funcionando correctamente. El livenessProbe se usa para reiniciar el contenedor si no responde, mientras que el readinessProbe se usa para marcar el contenedor como listo o no listo para recibir tráfico.        
-          livenessProbe:
-            httpGet:
-              path: /api/health
-              port: 3001
-            initialDelaySeconds: 20
-            periodSeconds: 10
+ #         livenessProbe:
+  #          httpGet:
+  #            path: /api/health
+  #            port: 3001
+  #          initialDelaySeconds: 20
+  #          periodSeconds: 10
 
-          readinessProbe:
-            httpGet:
-              path: /api/health
-              port: 3001
-            initialDelaySeconds: 10
-            periodSeconds: 5
-      resources:
-        requests:
-          memory: "128Mi"
-          cpu: "100m"
+#          readinessProbe:
+#            httpGet:
+#              path: /api/health
+#              port: 3001
+#            initialDelaySeconds: 10
+#            periodSeconds: 5
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
 
-        limits:
-          memory: "512Mi"
-          cpu: "500m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
