@@ -1,0 +1,19 @@
+#archivo para crear un DNS para el pod del backend
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: backend-service
+
+spec:
+  selector: #el nombre del label que usamos en deployment del backend
+    app: backend
+
+  ports:
+    - protocol: TCP
+      port: 3001 #puerto que se expone del servicio
+      targetPort: 3001 #puerto que se expone del contenedor
+
+  type: ClusterIP #este tipo de servicio solo es accesible dentro del cluster, no expone el servicio al exterior, para eso se usaría LoadBalancer o NodePort
+
+

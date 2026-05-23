@@ -1,0 +1,78 @@
+#archivo para crear el pod del backend, con 2 replicas, y las variables de entorno para conectar a la base de datos
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: backend
+  namespace: app-tfm
+
+spec:
+#para la alta disponibilidad generamos 2 replicas del backend, para que si una falla, la otra pueda seguir funcionando y atendiendo las peticiones. Esto se logra con el campo replicas, que indica cuántas copias del pod se deben crear. En este caso, se crean 2 copias del pod del backend, lo que permite distribuir la carga entre ellas y mejorar la tolerancia a fallos.
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: backend
+
+  template:
+    metadata:
+      labels:
+        app: backend
+  
+
+    spec:
+      containers:
+        - name: backend
+
+          image: ghcr.io/suecodingm/backend:latest #descargamos la imagen que previamente subimos a gitub
+          imagePullPolicy: Always #para descargar siempre la última versión de la imagen del backend desde el registro de contenedores, se puede usar la política de pull Always, que indica que Kubernetes debe intentar descargar la imagen cada vez que se crea o reinicia un pod. Esto es útil para asegurarse de que el backend siempre esté actualizado con la última versión de la imagen, especialmente durante el desarrollo y las pruebas. Sin embargo, en producción, se recomienda usar una etiqueta específica para la imagen, como una versión o un hash, para evitar problemas de compatibilidad y garantizar la estabilidad del sistema.
+          ports:
+            - containerPort: 3001
+
+          env:
+            - name: DB_HOST
+              value: postgres-service
+
+            - name: DB_PORT
+              value: "5432"
+
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_DB
+
+          #Para probar si el contenedor está vivo y listo para recibir tráfico, se pueden usar probes de liveness y readiness, que hacen peticiones HTTP a una ruta específica del backend, en este caso /api/health, que debería devolver un status 200 si el backend está funcionando correctamente. El livenessProbe se usa para reiniciar el contenedor si no responde, mientras que el readinessProbe se usa para marcar el contenedor como listo o no listo para recibir tráfico.        
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3001
+            initialDelaySeconds: 20
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3001
+            initialDelaySeconds: 10
+            periodSeconds: 5
+      resources:
+        requests:
+          memory: "128Mi"
+          cpu: "100m"
+
+        limits:
+          memory: "512Mi"
+          cpu: "500m"

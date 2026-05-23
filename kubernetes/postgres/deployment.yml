@@ -1,0 +1,63 @@
+#archivo para generar el pod de postgres, con una replica, y las variables de entorno para configurar la base de datos, que se obtienen de un secret llamado postgres-secret, que debe contener las claves POSTGRES_USER, POSTGRES_PASSWORD y POSTGRES_DB con los valores correspondientes para el usuario, contraseña y nombre de la base de datos. El contenedor usa la imagen oficial de postgres:16 y expone el puerto 5432 para la conexión a la base de datos.
+apiVersion: apps/v1
+kind: StatefulSet 
+
+metadata:
+  name: postgres
+  namespace: app-tfm
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: postgres
+
+  template:
+    metadata:
+      labels:
+        app: postgres
+
+    spec:
+      containers:
+        - name: postgres
+
+          image: postgres:16
+
+          ports:
+            - containerPort: 5432
+
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_DB
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+      resources:
+        requests:
+          memory: "128Mi"
+          cpu: "100m"
+
+        limits:
+          memory: "512Mi"
+          cpu: "500m"
+      #generamos el volumen para esta bd
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc

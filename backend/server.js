@@ -11,11 +11,11 @@ app.use(express.json());
 
 // PostgreSQL
 const pool = new Pool({
-  host: process.env.DB_HOST || 'db',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'fintech_db',
-  user: process.env.DB_USER || 'fintech_user',
-  password: process.env.DB_PASSWORD || 'fintech_pass123'
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD
 });
 
 // 

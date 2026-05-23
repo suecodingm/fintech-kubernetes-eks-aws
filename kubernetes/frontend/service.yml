@@ -1,0 +1,17 @@
+#archivo para la creacion del servicio front end
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: frontend-service
+
+spec:
+  selector:
+    app: frontend
+
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+#para que el front sea accesible desde fuera del cluster, se expone el servicio con un LoadBalancer
+  type: LoadBalancer

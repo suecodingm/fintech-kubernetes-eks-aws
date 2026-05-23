@@ -1,0 +1,46 @@
+#archivo para crear el pod del frontend, con 2 replicas para conectar al backend
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: frontend
+  namespace: app-tfm # compartimos el namespace con todos los pods
+
+spec:
+#para la alta disponibilidad generamos 2 replicas del front end, para que si una falla, la otra pueda seguir funcionando y atendiendo las peticiones. Esto se logra con el campo replicas, que indica cuántas copias del pod se deben crear. En este caso, se crean 2 copias del pod del backend, lo que permite distribuir la carga entre ellas y mejorar la tolerancia a fallos.
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: frontend
+
+  template:
+    metadata:
+      labels:
+        app: frontend
+
+    spec:
+      containers:
+        - name: frontend
+
+          image: ghcr.io/suecodingm/app-frontend:latest #descargamos la imagen que previamente subimos a gitub
+          imagePullPolicy: Always #para descargar siempre la última versión de la imagen del backend desde
+
+          ports:
+            - containerPort: 80
+
+         
+          #Para probar si el contenedor está vivo y listo para recibir tráfico, 
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
