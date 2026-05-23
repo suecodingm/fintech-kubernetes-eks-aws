@@ -24,7 +24,7 @@ spec:
       containers:
         - name: backend
 
-          image: ghcr.io/suecodingm/backend:latest #descargamos la imagen que previamente subimos a gitub
+          image: ghcr.io/suecodingm/app-backend:latest #descargamos la imagen que previamente subimos a gitub
           imagePullPolicy: Always #para descargar siempre la última versión de la imagen del backend desde el registro de contenedores, se puede usar la política de pull Always, que indica que Kubernetes debe intentar descargar la imagen cada vez que se crea o reinicia un pod. Esto es útil para asegurarse de que el backend siempre esté actualizado con la última versión de la imagen, especialmente durante el desarrollo y las pruebas. Sin embargo, en producción, se recomienda usar una etiqueta específica para la imagen, como una versión o un hash, para evitar problemas de compatibilidad y garantizar la estabilidad del sistema.
           ports:
             - containerPort: 3001
