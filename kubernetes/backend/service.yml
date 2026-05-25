@@ -14,7 +14,7 @@ spec:
     - protocol: TCP
       port: 3001 #puerto que se expone del servicio
       targetPort: 3001 #puerto que se expone del contenedor
-      nodeport: 30081
+      nodePort: 30081
 
   type: NodePort #este tipo de servicio solo es accesible dentro del cluster, no expone el servicio al exterior, para eso se usaría LoadBalancer o NodePort
 
