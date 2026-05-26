@@ -31,7 +31,8 @@ spec:
 
           env:
             - name: DB_HOST
-              value: postgres-service
+             # value: postgres-service ya no nos sirvce con kubernetes en varios nodos
+              value: postgres-service.app-tfm.svc.cluster.local
 
             - name: DB_PORT
               value: "5432"
