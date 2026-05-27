@@ -21,6 +21,9 @@ spec:
 
 
     spec:
+      nodeSelector:
+        node-role.kubernetes.io/worker: worker
+
       containers:
         - name: backend
 
