@@ -23,7 +23,7 @@ module "security_groups" {
 }
 
 
-resource "aws_instance" "k3s_server" {
+resource "aws_instance" "control_plane" {
   ami           = var.server_k3s 
   instance_type = "t3.medium"
   key_name = "tfm-k3s-key"
@@ -48,7 +48,7 @@ resource "aws_instance" "k3s_server" {
         curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --token tfm-cluster-token --tls-san $PUBLIC_IP" sh - 
       EOF  
   tags = {
-    Name = "k3s-server"
+    Name = "control_plane"
   }
 }
 
@@ -57,7 +57,7 @@ resource "aws_instance" "k3s_server" {
 
 resource "aws_instance" "app_workernodes" {
   ami           = var.worker_nodes 
-  instance_type = "t3.medium"
+  instance_type = "t3.small"
   key_name = "tfm-k3s-key"
   vpc_security_group_ids = [module.security_groups.worker_nodes_sg_id]
   subnet_id     = module.app_vpc.public_subnet_ids[0]
@@ -77,7 +77,7 @@ resource "aws_instance" "app_workernodes" {
 
     echo "Installing k3s agent..."
 
-    export K3S_URL="https://${aws_instance.k3s_server.private_ip}:6443"
+    export K3S_URL="https://${aws_instance.control_plane.private_ip}:6443"
     export K3S_TOKEN="tfm-cluster-token"
 
     curl -sfL https://get.k3s.io | sh -
@@ -93,7 +93,7 @@ resource "aws_instance" "app_workernodes" {
     }
 
 
-  depends_on = [aws_instance.k3s_server]
+  depends_on = [aws_instance.control_plane]
   
 }
 

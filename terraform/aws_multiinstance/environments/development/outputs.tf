@@ -5,13 +5,13 @@ output "instance_private_ip_workernode" {
 
 output "instance_private_ip_server" {
   description = "Ip privada de las instancias del server controlplane"
-  value       = aws_instance.k3s_server.private_ip
+  value       = aws_instance.control_plane.private_ip
 }
 
 
 output "instance_public_ip_server" {
   description = "Ip Publica de las instancias de server controlplane"
-  value       = aws_instance.k3s_server.public_ip
+  value       = aws_instance.control_plane.public_ip
 }
 # output "instance_public_ip_apollo" {
 #   description = "Ip Publica de las instancias de Apollo"
