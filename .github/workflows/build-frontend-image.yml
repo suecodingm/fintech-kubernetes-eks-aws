@@ -33,7 +33,7 @@ jobs:
     - name: Build Docker image
       run: |
         docker build \
-          --build-arg REACT_APP_API_URL=http://44.201.174.176:30081 \
+          --build-arg REACT_APP_API_URL=http://3.82.127.96:30081 \
           -t ghcr.io/suecodingm/app-frontend:latest ./frontend
 
     - name: Push Docker image
