@@ -32,7 +32,7 @@ ingress {
     from_port   = 8472
     to_port     = 8472
     protocol    = "udp"
-    self        = true
+    security_groups = [aws_security_group.server_k3s.id]
   } 
 
   ingress {
@@ -40,7 +40,7 @@ ingress {
     from_port   = 10250
     to_port     = 10250
     protocol    = "tcp"
-    self        = true
+    security_groups = [aws_security_group.server_k3s.id]
   }
 
   egress {
@@ -60,6 +60,13 @@ resource "aws_security_group" "server_k3s" {
     description = "SSH"
     from_port   = 22
     to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "NodePort Services"
+    from_port   = 30000
+    to_port     = 32767
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -101,7 +108,7 @@ resource "aws_security_group" "server_k3s" {
     from_port   = 8472
     to_port     = 8472
     protocol    = "udp"
-    self        = true
+    security_groups = [aws_security_group.worker_nodes.id]
   }
 
   ingress {
@@ -109,7 +116,7 @@ resource "aws_security_group" "server_k3s" {
     from_port   = 10250
     to_port     = 10250
     protocol    = "tcp"
-    self        = true
+    security_groups = [aws_security_group.worker_nodes.id]
   }
 
   egress {
