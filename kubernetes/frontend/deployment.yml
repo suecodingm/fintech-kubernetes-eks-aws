@@ -20,8 +20,8 @@ spec:
         app: frontend
 
     spec:
-      nodeSelector:
-        node-role.kubernetes.io/worker: worker
+#      nodeSelector:
+#        node-role.kubernetes.io/worker: worker
 
       containers:
         - name: frontend
