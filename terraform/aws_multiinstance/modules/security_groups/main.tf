@@ -32,7 +32,7 @@ ingress {
     from_port   = 8472
     to_port     = 8472
     protocol    = "udp"
-    security_groups = [aws_security_group.server_k3s.id]
+    cidr_blocks = ["10.0.0.0/16"]
   } 
 
   ingress {
@@ -40,7 +40,7 @@ ingress {
     from_port   = 10250
     to_port     = 10250
     protocol    = "tcp"
-    security_groups = [aws_security_group.server_k3s.id]
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
   egress {
@@ -108,7 +108,7 @@ resource "aws_security_group" "server_k3s" {
     from_port   = 8472
     to_port     = 8472
     protocol    = "udp"
-    security_groups = [aws_security_group.worker_nodes.id]
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
   ingress {
@@ -116,7 +116,7 @@ resource "aws_security_group" "server_k3s" {
     from_port   = 10250
     to_port     = 10250
     protocol    = "tcp"
-    security_groups = [aws_security_group.worker_nodes.id]
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
   egress {
