@@ -9,7 +9,7 @@ output "instance_private_ip_server" {
 }
 
 
-output "instance_public_ip_server" {
+output "instance_public_ip_control_plane" {
   description = "Ip Publica de las instancias de server controlplane"
   value       = aws_instance.control_plane.public_ip
 }
