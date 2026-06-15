@@ -1,0 +1,68 @@
+name: Build and Deploy Frontend Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Login to GHCR
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    # 1. Configurar el archivo y extraer la IP automáticamente
+    - name: Configure kubeconfig and extract API IP
+      id: extract_ip
+      run: |
+        mkdir -p ~/.kube
+        # Usamos tu secreto tal como lo tienes
+        echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+        
+        # Comando mágico: busca la línea 'server:', extrae la IP o dominio, y quita el puerto (:6443)
+        CLUSTER_IP=$(grep 'server:' ~/.kube/config | awk -F'//' '{print $2}' | awk -F':' '{print $1}')
+        
+        echo "La IP detectada dinámicamente es: $CLUSTER_IP"
+        
+        # Guardamos la IP en las variables globales del pipeline de GitHub para usarla en los siguientes pasos
+        echo "API_IP=$CLUSTER_IP" >> $GITHUB_ENV
+
+    # 2. Compilar usando la variable dinámica detectada en el paso anterior
+    - name: Build Docker image
+      run: |
+        docker build \
+          --build-arg REACT_APP_API_URL=http://${{ env.API_IP }}:30081 \
+          -t ghcr.io/suecodingm/app-frontend:latest ./frontend
+
+    - name: Push Docker image
+      run: |
+        docker push ghcr.io/suecodingm/app-frontend:latest
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v4
+
+    - name: Create namespace
+      run: |
+        kubectl create namespace app-tfm --dry-run=client -o yaml | kubectl apply -f -
+
+    - name: Deploy to Kubernetes
+      run: |
+        find kubernetes -type f
+        kubectl apply -R -f kubernetes/
+
+    - name: Restart deployment
+      run: |
+        kubectl rollout restart deployment/frontend -n app-tfm
