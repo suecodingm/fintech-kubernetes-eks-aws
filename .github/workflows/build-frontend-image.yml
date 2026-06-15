@@ -30,10 +30,24 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build Docker image
+     - name: Configure kubeconfig and extract API IP
+      id: extract_ip
+      run: |
+        mkdir -p ~/.kube
+        # Usamos tu secreto tal como lo tienes
+        echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+        
+        # Comando mágico: busca la línea 'server:', extrae la IP o dominio, y quita el puerto (:6443)
+        CLUSTER_IP=$(grep 'server:' ~/.kube/config | awk -F'//' '{print $2}' | awk -F':' '{print $1}')
+        
+        echo "La IP detectada dinámicamente es: $CLUSTER_IP"
+        
+        # Guardamos la IP en las variables globales del pipeline de GitHub para usarla en los siguientes pasos
+        echo "API_IP=$CLUSTER_IP" >> $GITHUB_ENV
+     - name: Build Docker image
       run: |
         docker build \
-          --build-arg REACT_APP_API_URL=http://44.211.144.11:30081 \
+          --build-arg REACT_APP_API_URL=http://${{ env.API_IP }}:30081 \
           -t ghcr.io/suecodingm/app-frontend:latest ./frontend
 
     - name: Push Docker image
@@ -43,15 +57,9 @@ jobs:
     - name: Install kubectl
       uses: azure/setup-kubectl@v4
 
-    - name: Configure kubeconfig
-      run: |
-        mkdir -p ~/.kube
-        echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
-
     - name: Create namespace
       run: |
         kubectl create namespace app-tfm --dry-run=client -o yaml | kubectl apply -f -
-
 
     - name: Deploy to Kubernetes
       run: |
