@@ -1,5 +1,4 @@
-#creamos nuestra imagen en GHCR (GitHub Container Registry) y la desplegamos en Kubernetes usando kubectl apply -f kubernetes/ para aplicar los manifiestos de Kubernetes que hemos creado, y luego hacemos un rollout restart para reiniciar el deployment y que coja la nueva imagen. Es importante configurar el kubeconfig con el secreto que hemos creado en GitHub Actions para poder acceder al cluster de Kubernetes desde la acción.
-
+#creamos la imagen de front end y luego la usamos para desplegar en el cluster
 name: Build and Deploy Frontend Image
 
 on:
@@ -30,7 +29,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-     - name: Configure kubeconfig and extract API IP
+    - name: Configure kubeconfig and extract API IP
       id: extract_ip
       run: |
         mkdir -p ~/.kube
@@ -44,7 +43,7 @@ jobs:
         
         # Guardamos la IP en las variables globales del pipeline de GitHub para usarla en los siguientes pasos
         echo "API_IP=$CLUSTER_IP" >> $GITHUB_ENV
-     - name: Build Docker image
+    - name: Build Docker image
       run: |
         docker build \
           --build-arg REACT_APP_API_URL=http://${{ env.API_IP }}:30081 \
