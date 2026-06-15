@@ -27,7 +27,7 @@ jobs:
 
     - name: Agregar Repositorio de Prometheus
       run: |
-        helm repo add prometheus-community https://github.com/prometheus-community/helm-charts/
+        helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
         helm repo update
 
     - name: Desplegar Stack Optimizado con Helm
