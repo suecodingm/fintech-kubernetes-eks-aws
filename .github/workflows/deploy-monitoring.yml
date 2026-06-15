@@ -1,4 +1,4 @@
-name: Build and Deploy Frontend Image
+name: Adding Monitoring with Prometheus anda Gaafana
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'monitoring/**'
-    workflow_dispatch:
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
