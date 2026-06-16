@@ -30,6 +30,14 @@ jobs:
         helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
         helm repo update
 
+    - name: Mostrar values-finops
+      run: |
+        cat monitoring/values-finops.yml
+
+    - name: Verificar directorio
+      run: |
+        pwd
+        ls -R
     - name: Desplegar Stack Optimizado con Helm
       run: |
         helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
