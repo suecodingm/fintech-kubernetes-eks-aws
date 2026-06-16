@@ -1,4 +1,4 @@
-name: Adding Monitoring with Prometheus anda Gaafana
+name: Adding Monitoring with Prometheus and Grafana
 
 on:
   push:
