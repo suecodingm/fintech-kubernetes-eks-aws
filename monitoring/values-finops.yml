@@ -8,11 +8,11 @@ alertmanager:
 
 prometheus:
   prometheusSpec:
-    scrapeInterval: "60s"
-    evaluationInterval: "60s"
+    scrapeInterval: "30s"
+    evaluationInterval: "30s"
     retention: "3h"
     resources:
       requests:
-        memory: "150Mi"
+        memory: "200Mi"
       limits:
         memory: "300Mi"
