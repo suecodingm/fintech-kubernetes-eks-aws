@@ -13,6 +13,30 @@ grafana:
     limits:
       memory: 256Mi
       cpu: 200m
+
+  sidecar:
+    dashboards:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          cpu: 50m
+          memory: 64Mi
+
+    datasources:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          cpu: 50m
+          memory: 64Mi
+
+
+
+
+
 alertmanager:
   enabled: false
 
@@ -20,7 +44,7 @@ prometheus:
   prometheusSpec:
     scrapeInterval: "60s"
     evaluationInterval: "60s"
-    retention: "1h"
+    retention: "4h"
 
     resources:
       requests:
