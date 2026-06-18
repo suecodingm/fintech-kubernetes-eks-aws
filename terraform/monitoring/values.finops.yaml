@@ -2,6 +2,7 @@ grafana:
 
   adminUser: admin
   adminPassword: admin123
+
   service:
     type: NodePort
     nodePort: 31668
@@ -14,14 +15,24 @@ grafana:
       memory: 512Mi
       cpu: 300m
 
-
 alertmanager:
+  enabled: false
+
+kubeEtcd:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeControllerManager:
   enabled: false
 
 prometheus:
   prometheusSpec:
+
     scrapeInterval: "60s"
     evaluationInterval: "60s"
+
     retention: "4h"
 
     resources:

@@ -62,7 +62,7 @@ jobs:
     - name: Deploy to Kubernetes
       run: |
         find kubernetes -type f
-        kubectl apply -f kubernetes/
+        kubectl apply -R -f kubernetes/
 
     - name: Restart deployment
       run: |
