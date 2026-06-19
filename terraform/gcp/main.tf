@@ -76,7 +76,11 @@ resource "google_compute_instance" "control_plane" {
   metadata_startup_script = <<-EOF
 #!/bin/bash
 
-curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --token tfm-cluster-token" sh -
+PUBLIC_IP=$(curl -s \
+-H "Metadata-Flavor: Google" \
+http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip)
+
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --token tfm-cluster-token --tls-san $PUBLIC_IP" sh -
 
 EOF
 
