@@ -26,7 +26,7 @@ resource "helm_release" "prometheus_stack" {
     create_namespace = true
 
     values = [
-		file("${path.module}/values-finops.yaml")
+		file("${path.module}/values-monitoring.yaml")
 	]
 
 }
