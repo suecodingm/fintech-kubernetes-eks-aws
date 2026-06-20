@@ -4,7 +4,7 @@ kind: Deployment
 
 metadata:
   name: frontend
-  namespace: app-tfm # compartimos el namespace con todos los pods
+  namespace: fintech
 
 spec:
 #para la alta disponibilidad generamos 2 replicas del front end, para que si una falla, la otra pueda seguir funcionando y atendiendo las peticiones. Esto se logra con el campo replicas, que indica cuántas copias del pod se deben crear. En este caso, se crean 2 copias del pod del backend, lo que permite distribuir la carga entre ellas y mejorar la tolerancia a fallos.
@@ -24,9 +24,9 @@ spec:
 #        node-role.kubernetes.io/worker: worker
 
       containers:
-        - name: frontend
+        - name: fintech-frontend
 
-          image: ghcr.io/suecodingm/app-frontend:latest #descargamos la imagen que previamente subimos a gitub
+          image: msmendozadocker/masterdevopscontainers:fintech-frontend #descargamos la imagen que previamente subimos a gitub
           imagePullPolicy: Always #para descargar siempre la última versión de la imagen del backend desde
 
           ports:
